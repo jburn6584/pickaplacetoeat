@@ -1,0 +1,1088 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>What Do You Feel Like Eating?</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        h1 {
+            color: #667eea;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+        }
+
+        .section {
+            margin-bottom: 40px;
+            padding: 25px;
+            background: #f8f9fa;
+            border-radius: 15px;
+        }
+
+        .section h2 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #555;
+            font-weight: 600;
+        }
+
+        input[type="text"],
+        input[type="tel"],
+        input[type="url"],
+        input[type="time"],
+        select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        input:focus,
+        select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .hours-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .day-hours {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            border: 2px solid #e0e0e0;
+        }
+
+        .day-hours label {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .day-hours input[type="checkbox"] {
+            width: auto;
+            margin-right: 10px;
+            transform: scale(1.2);
+        }
+
+        .time-inputs {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .time-inputs input {
+            padding: 8px;
+        }
+
+        .breaks-section {
+            margin-top: 15px;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 5px;
+        }
+
+        .breaks-section h4 {
+            font-size: 13px;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .break-item {
+            display: grid;
+            grid-template-columns: 1fr 1fr auto;
+            gap: 8px;
+            margin-bottom: 8px;
+            align-items: end;
+        }
+
+        .break-item input {
+            padding: 6px;
+            font-size: 14px;
+        }
+
+        .add-break-btn,
+        .remove-break-btn {
+            padding: 6px 12px;
+            font-size: 14px;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+            background: #667eea;
+            color: white;
+            width: auto;
+            margin-top: 0;
+        }
+
+        .add-break-btn {
+            width: 100%;
+            margin-top: 5px;
+        }
+
+        .remove-break-btn {
+            background: #ff4757;
+        }
+
+        .remove-break-btn:hover {
+            background: #ff3838;
+        }
+
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .restaurant-list {
+            list-style: none;
+        }
+
+        .restaurant-item {
+            background: white;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-radius: 10px;
+            border: 2px solid #e0e0e0;
+            position: relative;
+        }
+
+        .restaurant-item h3 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .restaurant-info {
+            color: #666;
+            margin-bottom: 5px;
+        }
+
+        .restaurant-info a {
+            color: #667eea;
+            text-decoration: none;
+        }
+
+        .restaurant-info a:hover {
+            text-decoration: underline;
+        }
+
+        .hours-display {
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid #eee;
+        }
+
+        .hours-display strong {
+            display: block;
+            margin-bottom: 5px;
+            color: #333;
+        }
+
+        .hours-display span {
+            display: inline-block;
+            margin-right: 15px;
+            color: #666;
+            font-size: 14px;
+        }
+
+        .delete-btn {
+            background: #ff4757;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-top: 10px;
+            margin-right: 10px;
+        }
+
+        .delete-btn:hover {
+            background: #ff3838;
+        }
+
+        .restaurant-item button:first-of-type {
+            background: #667eea;
+        }
+
+        .restaurant-item button:first-of-type:hover {
+            background: #5568d3;
+        }
+
+        .picker-section {
+            text-align: center;
+        }
+
+        .picker-controls {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .result-box {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin-top: 20px;
+            min-height: 150px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .result-box h3 {
+            font-size: 2em;
+            margin-bottom: 15px;
+        }
+
+        .result-box p {
+            font-size: 1.1em;
+            margin: 5px 0;
+        }
+
+        .result-box a {
+            color: #fff;
+            text-decoration: underline;
+        }
+
+        .empty-message {
+            text-align: center;
+            color: #999;
+            padding: 40px;
+            font-style: italic;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 1.8em;
+            }
+
+            .hours-grid,
+            .picker-controls {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>What Do You Feel Like Eating?</h1>
+
+        <!-- Add Restaurant Section -->
+        <div class="section">
+            <h2>Add a Restaurant</h2>
+            <div class="form-group">
+                <label for="restaurantName">Restaurant Name</label>
+                <input type="text" id="restaurantName" placeholder="Enter restaurant name">
+            </div>
+
+            <div class="form-group">
+                <label for="restaurantWebsite">Website</label>
+                <input type="url" id="restaurantWebsite" placeholder="https://example.com">
+            </div>
+
+            <div class="form-group">
+                <label for="restaurantPhone">Phone Number</label>
+                <input type="tel" id="restaurantPhone" placeholder="(555) 123-4567">
+            </div>
+
+            <div class="form-group">
+                <label for="restaurantAddress">Address</label>
+                <input type="text" id="restaurantAddress" placeholder="123 Main St, City, ST 12345">
+            </div>
+
+            <div class="form-group">
+                <label>Opening Hours</label>
+                <button type="button" onclick="setAllTo24Hours()" style="width: auto; padding: 10px 20px; margin-bottom: 15px; font-size: 14px;">Set All Days to 24 Hours</button>
+                <div class="hours-grid" id="hoursGrid">
+                    <!-- Days will be generated by JavaScript -->
+                </div>
+            </div>
+
+            <button onclick="addRestaurant()">Add Restaurant</button>
+        </div>
+
+        <!-- Restaurant List Section -->
+        <div class="section">
+            <h2>Your Restaurants</h2>
+            <ul class="restaurant-list" id="restaurantList">
+                <li class="empty-message">No restaurants added yet. Add one above!</li>
+            </ul>
+        </div>
+
+        <!-- Export/Import Section -->
+        <div class="section">
+            <h2>Share Your Restaurants</h2>
+            <p style="color: #666; margin-bottom: 15px;">Export your restaurants to share with others, or import restaurants someone shared with you.</p>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                <button onclick="exportRestaurants()">Export Restaurants</button>
+                <button onclick="document.getElementById('importFile').click()">Import Restaurants</button>
+            </div>
+            <input type="file" id="importFile" accept=".json" style="display: none;" onchange="importRestaurants(event)">
+            <div id="importMessage" style="margin-top: 10px; padding: 10px; border-radius: 5px; display: none;"></div>
+        </div>
+
+        <!-- Picker Section -->
+        <div class="section picker-section">
+            <h2>Pick a Restaurant</h2>
+            <div class="picker-controls">
+                <div class="form-group">
+                    <label for="currentDay">Day</label>
+                    <select id="currentDay">
+                        <option value="Monday">Monday</option>
+                        <option value="Tuesday">Tuesday</option>
+                        <option value="Wednesday">Wednesday</option>
+                        <option value="Thursday">Thursday</option>
+                        <option value="Friday">Friday</option>
+                        <option value="Saturday">Saturday</option>
+                        <option value="Sunday">Sunday</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="currentTime">Time</label>
+                    <input type="time" id="currentTime">
+                </div>
+            </div>
+            <button onclick="pickRestaurant()">Pick a Restaurant for Me!</button>
+            <div class="result-box" id="resultBox" style="display: none;">
+                <!-- Result will appear here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+        let editingRestaurantId = null;
+
+        // Initialize the hours grid
+        function initializeHoursGrid() {
+            const hoursGrid = document.getElementById('hoursGrid');
+            hoursGrid.innerHTML = '';
+
+            days.forEach(day => {
+                const dayDiv = document.createElement('div');
+                dayDiv.className = 'day-hours';
+                dayDiv.innerHTML = `
+                    <label>
+                        <input type="checkbox" id="open-${day}" onchange="handleDayCheckbox('${day}')">
+                        <strong>${day}</strong>
+                    </label>
+                    <div id="day-options-${day}" style="display: none; margin-top: 10px;">
+                        <label style="font-size: 13px; margin-bottom: 10px;">
+                            <input type="checkbox" id="different-hours-${day}" onchange="toggleCustomHours('${day}')">
+                            Use different hours for this day
+                        </label>
+                        <label style="font-size: 13px; margin-bottom: 10px;">
+                            <input type="checkbox" id="twentyfour-${day}" onchange="toggle24Hours('${day}')">
+                            Open 24 Hours
+                        </label>
+                        <div class="time-inputs" id="times-${day}" style="display: none;">
+                            <div>
+                                <label style="font-size: 12px;">Open</label>
+                                <input type="time" id="open-time-${day}" onchange="updateDefaultHours('${day}')">
+                            </div>
+                            <div>
+                                <label style="font-size: 12px;">Close</label>
+                                <input type="time" id="close-time-${day}" onchange="updateDefaultHours('${day}')">
+                            </div>
+                        </div>
+                        <div class="breaks-section" id="breaks-${day}" style="display: none;">
+                            <h4>Breaks (Closed Times)</h4>
+                            <div id="breaks-list-${day}"></div>
+                            <button type="button" class="add-break-btn" onclick="addBreak('${day}')">+ Add Break</button>
+                        </div>
+                    </div>
+                `;
+                hoursGrid.appendChild(dayDiv);
+            });
+        }
+
+        let defaultOpenTime = '';
+        let defaultCloseTime = '';
+
+        // Handle when a day checkbox is checked/unchecked
+        function handleDayCheckbox(day) {
+            const checkbox = document.getElementById(`open-${day}`);
+            const optionsDiv = document.getElementById(`day-options-${day}`);
+            const twentyfourCheckbox = document.getElementById(`twentyfour-${day}`);
+            
+            if (checkbox.checked) {
+                optionsDiv.style.display = 'block';
+                
+                // If we have default hours, apply them (unless it's a 24hr day)
+                if (defaultOpenTime && defaultCloseTime && !twentyfourCheckbox.checked) {
+                    document.getElementById(`open-time-${day}`).value = defaultOpenTime;
+                    document.getElementById(`close-time-${day}`).value = defaultCloseTime;
+                } else if (!twentyfourCheckbox.checked) {
+                    // Show time inputs for first day selected
+                    document.getElementById(`times-${day}`).style.display = 'grid';
+                }
+            } else {
+                optionsDiv.style.display = 'none';
+                document.getElementById(`different-hours-${day}`).checked = false;
+                document.getElementById(`times-${day}`).style.display = 'none';
+                twentyfourCheckbox.checked = false;
+            }
+        }
+
+        // Toggle custom hours for a specific day
+        function toggleCustomHours(day) {
+            const customCheckbox = document.getElementById(`different-hours-${day}`);
+            const timesDiv = document.getElementById(`times-${day}`);
+            const breaksDiv = document.getElementById(`breaks-${day}`);
+            const twentyfourCheckbox = document.getElementById(`twentyfour-${day}`);
+            
+            if (customCheckbox.checked) {
+                timesDiv.style.display = 'grid';
+                breaksDiv.style.display = 'block';
+                // Clear the values so user can enter custom hours
+                document.getElementById(`open-time-${day}`).value = '';
+                document.getElementById(`close-time-${day}`).value = '';
+            } else {
+                timesDiv.style.display = 'none';
+                breaksDiv.style.display = 'none';
+                twentyfourCheckbox.checked = false;
+                twentyfourCheckbox.disabled = false;
+                // Clear breaks
+                document.getElementById(`breaks-list-${day}`).innerHTML = '';
+                // Revert to default hours
+                if (defaultOpenTime && defaultCloseTime) {
+                    document.getElementById(`open-time-${day}`).value = defaultOpenTime;
+                    document.getElementById(`close-time-${day}`).value = defaultCloseTime;
+                }
+            }
+        }
+
+        // Toggle 24 hours mode
+        function toggle24Hours(day) {
+            const twentyfourCheckbox = document.getElementById(`twentyfour-${day}`);
+            const openTimeInput = document.getElementById(`open-time-${day}`);
+            const closeTimeInput = document.getElementById(`close-time-${day}`);
+            const timesDiv = document.getElementById(`times-${day}`);
+            
+            if (twentyfourCheckbox.checked) {
+                // Set to 24 hours and disable time inputs
+                openTimeInput.value = '00:00';
+                closeTimeInput.value = '23:59';
+                openTimeInput.disabled = true;
+                closeTimeInput.disabled = true;
+                timesDiv.style.opacity = '0.5';
+            } else {
+                // Re-enable time inputs
+                openTimeInput.disabled = false;
+                closeTimeInput.disabled = false;
+                timesDiv.style.opacity = '1';
+                openTimeInput.value = '';
+                closeTimeInput.value = '';
+            }
+        }
+
+        // Set all days to 24 hours
+        function setAllTo24Hours() {
+            days.forEach(day => {
+                // Check the day
+                const dayCheckbox = document.getElementById(`open-${day}`);
+                if (!dayCheckbox.checked) {
+                    dayCheckbox.checked = true;
+                    handleDayCheckbox(day);
+                }
+                
+                // Check 24 hours
+                const twentyfourCheckbox = document.getElementById(`twentyfour-${day}`);
+                if (!twentyfourCheckbox.checked) {
+                    twentyfourCheckbox.checked = true;
+                    toggle24Hours(day);
+                }
+            });
+        }
+
+        // Update default hours when first time is entered or changed
+        function updateDefaultHours(day) {
+            const openTime = document.getElementById(`open-time-${day}`).value;
+            const closeTime = document.getElementById(`close-time-${day}`).value;
+            const differentHoursChecked = document.getElementById(`different-hours-${day}`).checked;
+            
+            // Only update defaults if this day doesn't have custom hours checkbox selected
+            if (!differentHoursChecked && openTime && closeTime) {
+                defaultOpenTime = openTime;
+                defaultCloseTime = closeTime;
+                
+                // Apply to all other checked days that don't have custom hours
+                days.forEach(d => {
+                    if (d !== day) {
+                        const dayCheckbox = document.getElementById(`open-${d}`);
+                        const differentCheckbox = document.getElementById(`different-hours-${d}`);
+                        
+                        if (dayCheckbox.checked && !differentCheckbox.checked) {
+                            document.getElementById(`open-time-${d}`).value = defaultOpenTime;
+                            document.getElementById(`close-time-${d}`).value = defaultCloseTime;
+                        }
+                    }
+                });
+            }
+        }
+
+        // Add a break period
+        let breakCounter = 0;
+        function addBreak(day) {
+            const breaksList = document.getElementById(`breaks-list-${day}`);
+            const breakId = `break-${day}-${breakCounter++}`;
+            
+            const breakDiv = document.createElement('div');
+            breakDiv.className = 'break-item';
+            breakDiv.id = breakId;
+            breakDiv.innerHTML = `
+                <div>
+                    <label style="font-size: 11px;">Break Start</label>
+                    <input type="time" id="${breakId}-start">
+                </div>
+                <div>
+                    <label style="font-size: 11px;">Break End</label>
+                    <input type="time" id="${breakId}-end">
+                </div>
+                <button type="button" class="remove-break-btn" onclick="removeBreak('${breakId}')">Remove</button>
+            `;
+            breaksList.appendChild(breakDiv);
+        }
+
+        // Remove a break period
+        function removeBreak(breakId) {
+            const breakElement = document.getElementById(breakId);
+            if (breakElement) {
+                breakElement.remove();
+            }
+        }
+
+        // Load restaurants from session storage
+        function loadRestaurants() {
+            const stored = sessionStorage.getItem('restaurants');
+            return stored ? JSON.parse(stored) : [];
+        }
+
+        // Save restaurants to session storage
+        function saveRestaurants(restaurants) {
+            sessionStorage.setItem('restaurants', JSON.stringify(restaurants));
+        }
+
+        // Add a new restaurant
+        function addRestaurant() {
+            const name = document.getElementById('restaurantName').value.trim();
+            const website = document.getElementById('restaurantWebsite').value.trim();
+            const phone = document.getElementById('restaurantPhone').value.trim();
+            const address = document.getElementById('restaurantAddress').value.trim();
+
+            if (!name) {
+                alert('Please enter a restaurant name');
+                return;
+            }
+
+            const hours = {};
+            days.forEach(day => {
+                const checkbox = document.getElementById(`open-${day}`);
+                if (checkbox.checked) {
+                    const twentyfourChecked = document.getElementById(`twentyfour-${day}`).checked;
+                    const openTime = document.getElementById(`open-time-${day}`).value;
+                    const closeTime = document.getElementById(`close-time-${day}`).value;
+                    
+                    if (openTime && closeTime) {
+                        hours[day] = { 
+                            open: openTime, 
+                            close: closeTime,
+                            is24hours: twentyfourChecked
+                        };
+                        
+                        // Collect breaks if custom hours are used
+                        const differentHours = document.getElementById(`different-hours-${day}`).checked;
+                        if (differentHours) {
+                            const breaksList = document.getElementById(`breaks-list-${day}`);
+                            const breakItems = breaksList.querySelectorAll('.break-item');
+                            const breaks = [];
+                            
+                            breakItems.forEach(breakItem => {
+                                const breakId = breakItem.id;
+                                const startInput = document.getElementById(`${breakId}-start`);
+                                const endInput = document.getElementById(`${breakId}-end`);
+                                
+                                if (startInput.value && endInput.value) {
+                                    breaks.push({
+                                        start: startInput.value,
+                                        end: endInput.value
+                                    });
+                                }
+                            });
+                            
+                            if (breaks.length > 0) {
+                                hours[day].breaks = breaks;
+                            }
+                        }
+                    }
+                }
+            });
+
+            if (Object.keys(hours).length === 0) {
+                alert('Please select at least one day with opening hours');
+                return;
+            }
+
+            let restaurants = loadRestaurants();
+            
+            if (editingRestaurantId !== null) {
+                // Update existing restaurant
+                const index = restaurants.findIndex(r => r.id === editingRestaurantId);
+                if (index !== -1) {
+                    restaurants[index] = {
+                        id: editingRestaurantId,
+                        name,
+                        website,
+                        phone,
+                        address,
+                        hours
+                    };
+                }
+                editingRestaurantId = null;
+                
+                // Reset button
+                const addButton = document.querySelector('.section button[onclick="addRestaurant()"]');
+                addButton.textContent = 'Add Restaurant';
+                addButton.style.background = 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
+            } else {
+                // Add new restaurant
+                restaurants.push({
+                    id: Date.now(),
+                    name,
+                    website,
+                    phone,
+                    address,
+                    hours
+                });
+            }
+
+            saveRestaurants(restaurants);
+            displayRestaurants();
+            clearForm();
+        }
+
+        // Clear the form
+        function clearForm() {
+            document.getElementById('restaurantName').value = '';
+            document.getElementById('restaurantWebsite').value = '';
+            document.getElementById('restaurantPhone').value = '';
+            document.getElementById('restaurantAddress').value = '';
+            defaultOpenTime = '';
+            defaultCloseTime = '';
+            editingRestaurantId = null;
+            
+            // Reset button
+            const addButton = document.querySelector('.section button[onclick="addRestaurant()"]');
+            if (addButton) {
+                addButton.textContent = 'Add Restaurant';
+                addButton.style.background = 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
+            }
+            
+            days.forEach(day => {
+                document.getElementById(`open-${day}`).checked = false;
+                document.getElementById(`different-hours-${day}`).checked = false;
+                document.getElementById(`twentyfour-${day}`).checked = false;
+                document.getElementById(`day-options-${day}`).style.display = 'none';
+                document.getElementById(`times-${day}`).style.display = 'none';
+                document.getElementById(`breaks-${day}`).style.display = 'none';
+                document.getElementById(`breaks-list-${day}`).innerHTML = '';
+                document.getElementById(`open-time-${day}`).value = '';
+                document.getElementById(`close-time-${day}`).value = '';
+                document.getElementById(`open-time-${day}`).disabled = false;
+                document.getElementById(`close-time-${day}`).disabled = false;
+            });
+        }
+
+        // Display all restaurants
+        function displayRestaurants() {
+            const restaurants = loadRestaurants();
+            const listElement = document.getElementById('restaurantList');
+
+            if (restaurants.length === 0) {
+                listElement.innerHTML = '<li class="empty-message">No restaurants added yet. Add one above!</li>';
+                return;
+            }
+
+            listElement.innerHTML = restaurants.map(restaurant => `
+                <li class="restaurant-item">
+                    <h3>${restaurant.name}</h3>
+                    ${restaurant.address ? `<p class="restaurant-info">${restaurant.address}</p>` : ''}
+                    ${restaurant.phone ? `<p class="restaurant-info"><a href="tel:${restaurant.phone}">${restaurant.phone}</a></p>` : ''}
+                    ${restaurant.website ? `<p class="restaurant-info"><a href="${restaurant.website}" target="_blank">${restaurant.website}</a></p>` : ''}
+                    <div class="hours-display">
+                        <strong>Hours:</strong>
+                        ${Object.entries(restaurant.hours).map(([day, times]) => {
+                            let hoursText = `<span>${day}: `;
+                            if (times.is24hours) {
+                                hoursText += '24 Hours';
+                            } else {
+                                hoursText += `${times.open} - ${times.close}`;
+                            }
+                            if (times.breaks && times.breaks.length > 0) {
+                                hoursText += ` (Breaks: ${times.breaks.map(b => `${b.start}-${b.end}`).join(', ')})`;
+                            }
+                            hoursText += '</span>';
+                            return hoursText;
+                        }).join('')}
+                    </div>
+                    <button class="delete-btn" onclick="editRestaurant(${restaurant.id})">Edit</button>
+                    <button class="delete-btn" onclick="deleteRestaurant(${restaurant.id})">Delete</button>
+                </li>
+            `).join('');
+        }
+
+        // Delete a restaurant
+        function deleteRestaurant(id) {
+            if (confirm('Are you sure you want to delete this restaurant?')) {
+                let restaurants = loadRestaurants();
+                restaurants = restaurants.filter(r => r.id !== id);
+                saveRestaurants(restaurants);
+                displayRestaurants();
+            }
+        }
+
+        // Edit a restaurant
+        function editRestaurant(id) {
+            const restaurants = loadRestaurants();
+            const restaurant = restaurants.find(r => r.id === id);
+            
+            if (!restaurant) return;
+            
+            // Set editing mode
+            editingRestaurantId = id;
+            
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            
+            // Fill in basic info
+            document.getElementById('restaurantName').value = restaurant.name || '';
+            document.getElementById('restaurantWebsite').value = restaurant.website || '';
+            document.getElementById('restaurantPhone').value = restaurant.phone || '';
+            document.getElementById('restaurantAddress').value = restaurant.address || '';
+            
+            // Clear all days first
+            clearForm();
+            
+            // Restore basic info after clear
+            document.getElementById('restaurantName').value = restaurant.name || '';
+            document.getElementById('restaurantWebsite').value = restaurant.website || '';
+            document.getElementById('restaurantPhone').value = restaurant.phone || '';
+            document.getElementById('restaurantAddress').value = restaurant.address || '';
+            
+            // Fill in hours for each day
+            Object.entries(restaurant.hours).forEach(([day, hours]) => {
+                // Check the day
+                document.getElementById(`open-${day}`).checked = true;
+                handleDayCheckbox(day);
+                
+                // Set times
+                document.getElementById(`open-time-${day}`).value = hours.open;
+                document.getElementById(`close-time-${day}`).value = hours.close;
+                
+                // Check if 24 hours
+                if (hours.is24hours) {
+                    document.getElementById(`twentyfour-${day}`).checked = true;
+                    toggle24Hours(day);
+                }
+                
+                // Check if custom hours (has breaks or different from default)
+                if (hours.breaks && hours.breaks.length > 0) {
+                    document.getElementById(`different-hours-${day}`).checked = true;
+                    toggleCustomHours(day);
+                    
+                    // Re-set times after toggle
+                    document.getElementById(`open-time-${day}`).value = hours.open;
+                    document.getElementById(`close-time-${day}`).value = hours.close;
+                    
+                    // Add breaks
+                    hours.breaks.forEach(breakPeriod => {
+                        addBreak(day);
+                        const breaksList = document.getElementById(`breaks-list-${day}`);
+                        const lastBreak = breaksList.lastElementChild;
+                        const breakId = lastBreak.id;
+                        document.getElementById(`${breakId}-start`).value = breakPeriod.start;
+                        document.getElementById(`${breakId}-end`).value = breakPeriod.end;
+                    });
+                }
+            });
+            
+            // Change button text
+            const addButton = document.querySelector('.section button[onclick="addRestaurant()"]');
+            addButton.textContent = 'Update Restaurant';
+            addButton.style.background = 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)';
+        }
+
+        // Check if restaurant is open at given day and time
+        function isRestaurantOpen(restaurant, day, time) {
+            const hours = restaurant.hours[day];
+            if (!hours) return false;
+
+            // If it's a 24-hour restaurant, check for breaks only
+            if (hours.is24hours) {
+                if (hours.breaks && hours.breaks.length > 0) {
+                    const [currentHour, currentMin] = time.split(':').map(Number);
+                    const currentMinutes = currentHour * 60 + currentMin;
+                    
+                    for (let breakPeriod of hours.breaks) {
+                        const [breakStartHour, breakStartMin] = breakPeriod.start.split(':').map(Number);
+                        const [breakEndHour, breakEndMin] = breakPeriod.end.split(':').map(Number);
+                        
+                        const breakStartMinutes = breakStartHour * 60 + breakStartMin;
+                        const breakEndMinutes = breakEndHour * 60 + breakEndMin;
+                        
+                        if (currentMinutes >= breakStartMinutes && currentMinutes <= breakEndMinutes) {
+                            return false; // Restaurant is on break
+                        }
+                    }
+                }
+                return true; // Open 24 hours (not on break)
+            }
+
+            const [currentHour, currentMin] = time.split(':').map(Number);
+            const [openHour, openMin] = hours.open.split(':').map(Number);
+            const [closeHour, closeMin] = hours.close.split(':').map(Number);
+
+            const currentMinutes = currentHour * 60 + currentMin;
+            const openMinutes = openHour * 60 + openMin;
+            const closeMinutes = closeHour * 60 + closeMin;
+
+            // Check if within operating hours
+            let isOpen = false;
+            if (closeMinutes < openMinutes) {
+                // Handle closing time past midnight
+                isOpen = currentMinutes >= openMinutes || currentMinutes <= closeMinutes;
+            } else {
+                isOpen = currentMinutes >= openMinutes && currentMinutes <= closeMinutes;
+            }
+
+            // If restaurant is open, check if it's during a break
+            if (isOpen && hours.breaks && hours.breaks.length > 0) {
+                for (let breakPeriod of hours.breaks) {
+                    const [breakStartHour, breakStartMin] = breakPeriod.start.split(':').map(Number);
+                    const [breakEndHour, breakEndMin] = breakPeriod.end.split(':').map(Number);
+                    
+                    const breakStartMinutes = breakStartHour * 60 + breakStartMin;
+                    const breakEndMinutes = breakEndHour * 60 + breakEndMin;
+                    
+                    if (currentMinutes >= breakStartMinutes && currentMinutes <= breakEndMinutes) {
+                        return false; // Restaurant is on break
+                    }
+                }
+            }
+
+            return isOpen;
+        }
+
+        // Pick a random restaurant
+        function pickRestaurant() {
+            const day = document.getElementById('currentDay').value;
+            const time = document.getElementById('currentTime').value;
+
+            if (!time) {
+                alert('Please select a time');
+                return;
+            }
+
+            const restaurants = loadRestaurants();
+            const availableRestaurants = restaurants.filter(r => isRestaurantOpen(r, day, time));
+
+            const resultBox = document.getElementById('resultBox');
+            resultBox.style.display = 'flex';
+
+            if (availableRestaurants.length === 0) {
+                resultBox.innerHTML = `
+                    <h3>No Restaurants Available</h3>
+                    <p>No restaurants are open on ${day} at ${time}</p>
+                `;
+                return;
+            }
+
+            const randomIndex = Math.floor(Math.random() * availableRestaurants.length);
+            const chosen = availableRestaurants[randomIndex];
+
+            resultBox.innerHTML = `
+                <h3>${chosen.name}</h3>
+                ${chosen.address ? `<p><a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(chosen.address)}" target="_blank">${chosen.address}</a></p>` : ''}
+                ${chosen.phone ? `<p><a href="tel:${chosen.phone}">${chosen.phone}</a></p>` : ''}
+                ${chosen.website ? `<p><a href="${chosen.website}" target="_blank">Visit Website</a></p>` : ''}
+                <p style="margin-top: 10px; font-size: 0.9em;">Open: ${chosen.hours[day].is24hours ? '24 Hours' : `${chosen.hours[day].open} - ${chosen.hours[day].close}`}</p>
+            `;
+        }
+
+        // Set current day and time on page load
+        function setCurrentDateTime() {
+            const now = new Date();
+            const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+            const currentDay = days[now.getDay()];
+            const currentTime = now.getHours().toString().padStart(2, '0') + ':' + 
+                               now.getMinutes().toString().padStart(2, '0');
+
+            document.getElementById('currentDay').value = currentDay;
+            document.getElementById('currentTime').value = currentTime;
+        }
+
+        // Export restaurants to JSON file
+        function exportRestaurants() {
+            const restaurants = loadRestaurants();
+            
+            if (restaurants.length === 0) {
+                alert('No restaurants to export!');
+                return;
+            }
+            
+            const dataStr = JSON.stringify(restaurants, null, 2);
+            const dataBlob = new Blob([dataStr], { type: 'application/json' });
+            const url = URL.createObjectURL(dataBlob);
+            
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = 'my-restaurants.json';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+            
+            showImportMessage('Restaurants exported successfully!', 'success');
+        }
+
+        // Import restaurants from JSON file
+        function importRestaurants(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const importedRestaurants = JSON.parse(e.target.result);
+                    
+                    // Validate that it's an array
+                    if (!Array.isArray(importedRestaurants)) {
+                        throw new Error('Invalid file format');
+                    }
+                    
+                    // Ask user if they want to replace or merge
+                    const currentRestaurants = loadRestaurants();
+                    let finalRestaurants;
+                    
+                    if (currentRestaurants.length > 0) {
+                        const replace = confirm(
+                            `You have ${currentRestaurants.length} restaurant(s) saved.\n\n` +
+                            'Click OK to REPLACE them with the imported restaurants.\n' +
+                            'Click Cancel to ADD the imported restaurants to your existing ones.'
+                        );
+                        
+                        if (replace) {
+                            finalRestaurants = importedRestaurants;
+                        } else {
+                            // Merge - need to ensure unique IDs
+                            finalRestaurants = [...currentRestaurants];
+                            importedRestaurants.forEach(restaurant => {
+                                // Generate new ID to avoid conflicts
+                                restaurant.id = Date.now() + Math.random();
+                                finalRestaurants.push(restaurant);
+                            });
+                        }
+                    } else {
+                        finalRestaurants = importedRestaurants;
+                    }
+                    
+                    saveRestaurants(finalRestaurants);
+                    displayRestaurants();
+                    showImportMessage(`Successfully imported ${importedRestaurants.length} restaurant(s)!`, 'success');
+                    
+                } catch (error) {
+                    showImportMessage('Error importing file. Please make sure it\'s a valid restaurant export file.', 'error');
+                }
+            };
+            
+            reader.readAsText(file);
+            
+            // Reset file input so the same file can be imported again
+            event.target.value = '';
+        }
+
+        // Show import/export message
+        function showImportMessage(message, type) {
+            const messageDiv = document.getElementById('importMessage');
+            messageDiv.textContent = message;
+            messageDiv.style.display = 'block';
+            messageDiv.style.backgroundColor = type === 'success' ? '#d4edda' : '#f8d7da';
+            messageDiv.style.color = type === 'success' ? '#155724' : '#721c24';
+            messageDiv.style.border = type === 'success' ? '1px solid #c3e6cb' : '1px solid #f5c6cb';
+            
+            // Hide message after 5 seconds
+            setTimeout(() => {
+                messageDiv.style.display = 'none';
+            }, 5000);
+        }
+
+        // Initialize on page load
+        initializeHoursGrid();
+        displayRestaurants();
+        setCurrentDateTime();
+    </script>
+</body>
+</html>
