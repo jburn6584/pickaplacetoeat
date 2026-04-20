@@ -416,7 +416,7 @@
         const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
         let editingRestaurantId = null;
 
-        // Initialize the hours grid
+        
         function initializeHoursGrid() {
             const hoursGrid = document.getElementById('hoursGrid');
             hoursGrid.innerHTML = '';
@@ -462,7 +462,7 @@
         let defaultOpenTime = '';
         let defaultCloseTime = '';
 
-        // Handle when a day checkbox is checked/unchecked
+        
         function handleDayCheckbox(day) {
             const checkbox = document.getElementById(`open-${day}`);
             const optionsDiv = document.getElementById(`day-options-${day}`);
@@ -493,25 +493,30 @@
             const timesDiv = document.getElementById(`times-${day}`);
             const breaksDiv = document.getElementById(`breaks-${day}`);
             const twentyfourCheckbox = document.getElementById(`twentyfour-${day}`);
+            const openTimeInput = document.getElementById(`open-time-${day}`);
+            const closeTimeInput = document.getElementById(`close-time-${day}`);
             
             if (customCheckbox.checked) {
                 timesDiv.style.display = 'grid';
                 breaksDiv.style.display = 'block';
                 // Clear the values so user can enter custom hours
-                document.getElementById(`open-time-${day}`).value = '';
-                document.getElementById(`close-time-${day}`).value = '';
+                openTimeInput.value = '';
+                closeTimeInput.value = '';
             } else {
-                timesDiv.style.display = 'none';
                 breaksDiv.style.display = 'none';
                 twentyfourCheckbox.checked = false;
-                twentyfourCheckbox.disabled = false;
+                // Re-enable inputs if they were disabled by 24hr
+                openTimeInput.disabled = false;
+                closeTimeInput.disabled = false;
+                timesDiv.style.opacity = '1';
                 // Clear breaks
                 document.getElementById(`breaks-list-${day}`).innerHTML = '';
                 // Revert to default hours
                 if (defaultOpenTime && defaultCloseTime) {
-                    document.getElementById(`open-time-${day}`).value = defaultOpenTime;
-                    document.getElementById(`close-time-${day}`).value = defaultCloseTime;
+                    openTimeInput.value = defaultOpenTime;
+                    closeTimeInput.value = defaultCloseTime;
                 }
+                // Keep the time inputs visible - don't hide them
             }
         }
 
@@ -615,15 +620,15 @@
             }
         }
 
-        // Load restaurants from session storage
+        // Load restaurants from local storage
         function loadRestaurants() {
-            const stored = sessionStorage.getItem('restaurants');
+            const stored = localStorage.getItem('restaurants');
             return stored ? JSON.parse(stored) : [];
         }
 
-        // Save restaurants to session storage
+        // Save restaurants to local storage
         function saveRestaurants(restaurants) {
-            sessionStorage.setItem('restaurants', JSON.stringify(restaurants));
+            localStorage.setItem('restaurants', JSON.stringify(restaurants));
         }
 
         // Add a new restaurant
@@ -811,13 +816,13 @@
             
             if (!restaurant) return;
             
-            // Set editing mode
+           
             editingRestaurantId = id;
             
-            // Scroll to top
+            
             window.scrollTo({ top: 0, behavior: 'smooth' });
             
-            // Fill in basic info
+            
             document.getElementById('restaurantName').value = restaurant.name || '';
             document.getElementById('restaurantWebsite').value = restaurant.website || '';
             document.getElementById('restaurantPhone').value = restaurant.phone || '';
@@ -1064,7 +1069,7 @@
             event.target.value = '';
         }
 
-        // Show import/export message
+        
         function showImportMessage(message, type) {
             const messageDiv = document.getElementById('importMessage');
             messageDiv.textContent = message;
@@ -1073,13 +1078,13 @@
             messageDiv.style.color = type === 'success' ? '#155724' : '#721c24';
             messageDiv.style.border = type === 'success' ? '1px solid #c3e6cb' : '1px solid #f5c6cb';
             
-            // Hide message after 5 seconds
+            
             setTimeout(() => {
                 messageDiv.style.display = 'none';
             }, 5000);
         }
 
-        // Initialize on page load
+      
         initializeHoursGrid();
         displayRestaurants();
         setCurrentDateTime();
